@@ -1,0 +1,764 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Jack McKeown Masters Defense</title>
+
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/blood.css">
+
+	<!-- Theme used for syntax highlighted code -->
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+
+<body>
+	<style>
+		.small {
+			transform: scale(0.7);
+			font-size: 0.7em;
+		}
+
+		.red {
+			color: rgb(255, 150, 150);
+		}
+
+		.green {
+			color: rgb(150, 255, 150);
+		}
+
+		.yellow {
+			color: rgb(255, 255, 123);
+		}
+
+		.row {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-around;
+		}
+
+		.box {
+			border: 2px solid grey;
+			padding: 15px;
+			margin: 5px;
+			font-size: 24pt;
+		}
+
+		.emph {
+			font-style: italic;
+		}
+
+		.ul {
+			text-decoration: underline;
+		}
+
+		.reveal ul,
+		.reveal ul li ul {
+			list-style: none;
+			/* Remove default bullets */
+		}
+
+		ul>li::before {
+			content: "";
+			/* Add content: \2022 is the CSS Code/unicode for a bullet */
+			background: red;
+			/* Change the color */
+			font-weight: bold;
+			/* If you want it to be bold */
+			display: inline-block;
+			/* Needed to add space between the bullet and the text */
+			border-radius: 50%;
+
+			margin-left: -24px;
+			margin-right: 8px;
+			margin-bottom: 4px;
+			width: 10px;
+			height: 10px;
+		}
+
+		ul li ul li::before {
+			content: "";
+			/* Add content: \2022 is the CSS Code/unicode for a bullet */
+			background: none;
+			border: 2px solid red;
+			/* Change the color */
+			font-weight: bold;
+			/* If you want it to be bold */
+			display: inline-block;
+			/* Needed to add space between the bullet and the text */
+			border-radius: 50%;
+
+			margin-left: -24px;
+			margin-right: 8px;
+			margin-bottom: 4px;
+			width: 8px;
+			height: 8px;
+		}
+
+		.twoOverOneGrid {
+			display: grid;
+			grid-template-areas:
+				"topLeft topRight"
+				"bottom bottom";
+		}
+
+		.twoOverOneGrid>*:nth-child(1) {
+			grid-area: topLeft;
+		}
+
+		.twoOverOneGrid>*:nth-child(2) {
+			grid-area: topRight;
+		}
+
+		.twoOverOneGrid>*:nth-child(3) {
+			grid-area: bottom;
+		}
+
+		.twoOverTwoGrid {
+			display: grid;
+			grid-template-areas:
+				"topLeft topRight"
+				"bottomLeft bottomRight";
+		}
+
+		.twoOverOneGrid>*,
+		.twoOverTwoGrid>* {
+			font-size: 0.5em;
+		}
+
+		.vertical {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		img {
+			background: white;
+			max-width:100%;
+		}
+
+		.reveal h3{
+			font-size:36pt;
+		}
+
+		.figure{
+			width:650px;
+		}
+
+	</style>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h3>Clause Representation for Proof Guidance using Neural Networks</h3>
+				<span>John (Jack) McKeown</span><br>
+				<span class="small">Supervised by Dr. Geoff Sutcliffe</span>
+			</section>
+
+			<section>
+				<h3>Outline</h3>
+				<div class="box" style="width:70%;margin:auto;">
+					<ol style="color:red;">
+						<li><span style="color:whitesmoke;">Introduction to Automated Reasoning</li>
+						<li><span style="color:whitesmoke;">Given Clause Selection</span></li>
+						<li><span style="color:whitesmoke;">Research Goals</span></li>
+						<li><span style="color:whitesmoke;">MPTPTP2078 Dataset</span></li>
+						<li><span style="color:whitesmoke;">Previous Work</span></li>
+						<li><span style="color:whitesmoke;">Supervised Approaches</span></li>
+						<li><span style="color:whitesmoke;">Unsupervised Approaches</span></li>
+						<li><span style="color:whitesmoke;">Results</span></li>
+						<li><span style="color:whitesmoke;">Future Research</span></li>
+					</ol>
+				</div>
+			</section>
+
+			<section id="ATP">
+				<h3>Automated Reasoning</h3>
+
+				<section>
+					<div class="twoOverTwoGrid">
+						<div class="box vertical fragment">
+							<h4>Propositional Logic</h4><br>
+							<ul>
+								<li class="fragment">Restrictively simple</li>
+								<li class="fragment">Boolean satisfiability is NP-Complete</li>
+								<li class="fragment">Surprisingly fast heuristic solvers exist nonetheless</li>
+							</ul>
+							<div class="fragment" style="border-top: 1px solid white; text-align:left; margin-top:1em;">
+								<span class="ul">Example:</span><br>
+								<span class="green">
+									$ jack\_is\_happy \implies jack\_drank\_coffee$
+								</span>
+							</div>
+						</div>
+
+						<div class="box vertical fragment">
+							<h4>First Order Logic</h4><br>
+							<ul>
+								<li class="fragment">Complete (all tautologies are theorems)</li>
+								<li class="fragment">Semidecidable</li>
+								<li class="fragment">Practical for more real world problems</li>
+							</ul>
+							<div class="fragment" style="border-top: 1px solid white; text-align:left; margin-top:1em;">
+								<span class="ul">Example:</span><br>
+								<span class="green">
+									$ \forall X (happy(X) \implies drank(X, coffee)) $
+								</span>
+							</div>
+						</div>
+
+						<div class="box vertical fragment">
+							<h4>Typed First Order Logic</h4><br>
+							<ul>
+								<li class="fragment">Types allow for static type-checking to make problem formulation
+									easier.</li>
+							</ul>
+							<div class="fragment" style="border-top: 1px solid white; text-align:left; margin-top:1em;">
+								<span class="ul">Example:</span><br>
+								<span class="green">
+									$ \forall (X:person) (happy(X) \implies drank(X, coffee)) $
+								</span>
+							</div>
+						</div>
+
+						<div class="box vertical fragment">
+							<h4>Higher Order Logic</h4><br>
+							<ul>
+								<li class="fragment">Incomplete</li>
+								<li class="fragment">Quantification over functions/predicates</li>
+								<li class="fragment">Very expressive but very abstract</li>
+								<li class="fragment">Types help avoid Russell's Paradox</li>
+							</ul>
+							<!-- <div class="fragment" style="border-top: 1px solid white; text-align:left; margin-top:1em;">
+									<span class="ul">Example:</span><br>
+									<span class="green">
+										¯\_(ツ)_/¯
+									</span>
+								</div> -->
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<div class="box">
+						<h4>Automated Theorem Proving</h4><br>
+						<ul>
+							<li class="fragment">Proving conjectures to be theorems of a set of axioms using
+								computational methods</li>
+							<li class="fragment"><span class="emph green">Saturation</span> means finding the closure of
+								set of formulae under a set of inference rules.</li>
+							<li class="fragment">Proofs by contradiction via saturating $axioms \cup \{\neg
+								conjecture\}$</li>
+							<li class="fragment"><a href="https://eprover.org">Eprover</a> - state of the art first
+								order saturation based theorem prover written in C</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+
+			<section id="GCS">
+				<h3>Given Clause Selection</h3>
+				<img src="images/processedAndUnprocessedSets.svg">
+			</section>
+
+			<section id="researchGoals">
+				<h3>Research Goals</h3>
+				<section>
+					<h4>Clause Embedding</h4>
+					<div style="display:flex; width:100%">
+						<div class="box"
+							style="font-family:monospace; font-size:0.4em;display: grid; justify-content:center;align-items:center;">
+							<div>
+								p<span class="green">(</span>f<span class="red">(</span>X,a<span class="red">)</span>,
+								a<span class="green">)</span>
+								|
+								q<span class="green">(</span>f<span class="red">(</span>X,a<span class="red">)</span>,
+								g<span class="red">(</span>a,b,c<span class="red">)</span><span class="green">)</span>
+								| c!=s
+							</div>
+						</div>
+						<div style="margin:auto;">
+							$\rightarrow$
+						</div>
+						<div class="box" style="width:20%;display:grid;justify-content:center;align-items:center;">
+							<img src="images/clauseDag.png">
+						</div>
+						<div style="margin:auto;">
+							$\rightarrow$
+						</div>
+						<div class="box" style="display:grid;justify-content:center;align-items:center;">
+							$$
+							\newcommand\mycolv[1]{\begin{bmatrix}#1\end{bmatrix}}
+							\mycolv{1.2\\-0.2\\0.9\\ \vdots}
+							$$
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Classification</h4>
+					<div style="display:flex">
+						<div class="box" style="font-size:0.5em;">
+							$$
+							\underbrace{
+							\mycolv{1.2\\-0.2\\0.9\\ \vdots}
+							}_\text{Given Clause},
+							\underbrace{
+							\begin{bmatrix}
+							0.3 & -1.1 & 0.7 & \cdots \\
+							1.3 & -0.3 & -0.3& \cdots \\
+							0.1 & 0.24 & 0.2& \cdots \\
+							\vdots & \vdots & \vdots & \ddots
+							\end{bmatrix}
+							}_\text{Context Clauses}
+							$$
+						</div>
+						<div style="margin:auto;">
+							$\rightarrow$
+						</div>
+						<div class="box" style="margin:auto">
+							Classifier
+						</div>
+						<div style="margin:auto;">
+							$\rightarrow$
+						</div>
+						<div class="box" style="width:100%;display:grid;justify-content: center;align-items:center;">
+							<span>
+								<span class="green">Select</span> or <span class="red">Don't</span><br>
+								<span style="font-size:0.5em;">
+									Within E, the output becomes the priority for a priority queue.
+								</span>
+							</span>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Putting It All Together</h4>
+					<div class="box">
+						<img src="images/architecture.svg" alt="architecture" width=550>
+					</div>
+				</section>
+			</section>
+
+			<section id="MPTPTP2078">
+				<h3>MPTPTP2078 Dataset</h3>
+				<ul>
+					<li class="fragment">Mizar Mathematical Library</li>
+					<li class="fragment"><a href="https://github.com/JUrban/MPTP2078">MPTP2078</a> - <span
+							class="emph green">bushy</span> and <span class="emph red">chainy</span> variants of 2078
+						problems leading up to a specific theorem in MML</li>
+					<li class="fragment"><a href="https://github.com/TPTPWorld/MPTPTP2078">MPTPTP2078</a> - A refined
+						version of MPTP2078</li>
+				</ul>
+
+			</section>
+
+			<section id="previousWork">
+				<h3 data-id="title">Previous Work and Background</h3>
+				<section>
+					<div class="box" style="font-size:0.6em;">
+						<h4>Graph Neural Networks (GNNs)</h4>
+						The term <span class="green">Graph Neural Network</span> was coined in 2005 by Gori et al:
+						<blockquote></li>
+							More precisely, let $w$ be a
+							set of parameters and $f_w$ be a parametric transition function
+							that expresses the dependence of a node on its neighborhood.
+							The state [of graph node $n$], $x_n$, is defined as the solution of the system of equations:
+	
+							$$x_n = f_w(l_n, x_{ne[n]},l_{ne[n]}), n \in \mathbb{N}$$
+	
+							where $l_n$, $x_{ne[n]}$, $l_{ne[n]}$ are the label of $n$, and the states and
+							the labels of the nodes in the neighborhood of $n$, respectively.
+						</blockquote>
+						In their implementation:<br><br>
+						<ul>
+							<li>$f_w$ is a fully connected neural net</li>
+							<li>$x_{ne[n]}$ are summed.</li>
+							<li>$l_{ne[n]}$ are summed.</li>
+						</ul>
+					</div>
+				</section>
+
+				<section>
+					<div class="box" style="font-size:0.6em;">
+						<h4>Graph Convolutional Networks (GCNs)</h4>
+						<ul>
+							<li>Defined in 2017 by Kipf and Welling</li>
+							<li>$H^{(l+1)}= \sigma\!\left(\tilde{D}^{-\frac{1}{2}} \tilde{A}\tilde{D}^{-\frac{1}{2}}H^{(l)} W^{(l)} \right) \, $</li>
+							<li>$\tilde{D}^{-\frac{1}{2}} \tilde{A}\tilde{D}^{-\frac{1}{2}}$ does not require explicit access to the adjacency matrix.</li>
+							<li>Has the effect of <span class="emph">quieting</span> the nodes with large degree.</li>
+						</ul>
+					</div>
+				</section>
+
+				<section>
+					<div class="box" style="font-size:0.5em;">
+						<h4>Message Passing Neural Networks (MPNNs)</h4>
+
+						MPNNs described in the language of Gilmer et al.:
+						<blockquote>
+							The message passing phase runs for $T$ time steps and is defined in terms of message functions $M_t$
+							and vertex update functions $U_t$.
+
+
+							During the message passing phase, hidden states $h_v^t$
+							at each node in the graph are
+							updated based on messages 
+							$m_v^{t+1}$ according to
+
+							\begin{eqnarray}
+							m_v^{t+1} &=& \sum_{w \in N(v)} M_t(h_v^t, h_w^t, e_{vw})\\
+							h_v^{t+1} &=& U_t(h_v^t, m_v^{t+1})
+							\end{eqnarray}
+						
+							where in the sum, $N(v)$ denotes the neighbors of $v$ in graph
+							$G$. 
+							
+							The readout phase computes a feature vector for the
+							whole graph using some readout function $R$ according    
+						
+							$$\hat{y} = R(\{h_v^T | v\in G\})$$
+						</blockquote>
+					</div>
+				</section>
+
+				<section>
+					<div class="box" style="font-size:0.7em;">
+						<h4>Other Models</h4>
+						<ul>
+							<li>TreeLSTM / DagLSTM</li>
+							<li>Recursive Neural Networks (not recurrent)</li>
+
+						</ul>
+					</div>
+				</section>
+
+				<section>
+					<div class="box" style="font-size:0.7em;">
+						<h4>Machine Learning for ATP</h4>
+						<ul>
+							<li><span class="green">Google:</span> HolStep dataset and GNNs for higher order logic</li>
+							<li><span class="green">Enigma:</span> GCS using hand crafted features classified with XGBoost</li>
+							<li><span class="green">Enigma-NG:</span> Recursive Neural Network</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+
+			<section>
+				<h3>Supervised Approaches</h3>
+				<section>
+					<div class="box">
+						<h4>Custom Model</h4>
+						<ul>
+							<li><span class="emph green">Asynchronous message passing</span> (uses topological sorting)</li>
+							<li><span class="emph green">Attention</span> instead of simple sum</li>
+							<li><span class="emph green">Readout via root</span> rather than via global pooling</li>
+							<li><span class="red">Hard to parallelize (super slow)</span></li>
+						</ul>
+					</div>
+				</section>
+
+				<section>
+					<div class="box">
+						<h4>2-Layer PyTorch Geometric (PyG) GCN</h4>
+						<ul>
+							<li> <span class="green">Simple</span></li>
+							<li> <span class="green">Parallelism handled by PyG</span></li>
+						</ul>
+					</div>
+				</section>
+
+				<section>
+					<div class="box">
+						<h4>Classifiers</h4>
+						<ul>
+							<li>Both clause embedding models are trained with the same classifier architecture</li>
+							<li>The classifier sums the context vectors and then concatenates this sum with the given clause vector</li>
+							<li>This concatwereenation then goes through a simple 2-layer MLP with ReLU activations</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+
+			<section>
+				<h3>Unsupervised Approaches</h3>
+
+				<section>
+					<div class="box" style="font-size:0.7em;">
+						<h4>Autoencoder Background</h4>
+						<ul>
+							<li>Train $\theta=($<span class="red">$\theta_D$</span>,<span
+									class="green">$\theta_E$</span>$)$ so that <span
+									class="red">$Decode_{\theta_D}$</span>$($<span
+									class="green">$Encode_{\theta_E}$</span>$(x)) \approx x$</li>
+							<li>Typically used for nonlinear dimensionality reduction</li>
+							<li>
+								The architecture of <span class="green">$Encode$</span> and <span
+									class="red">$Decode$</span> is chosen so that <br>
+								<span class="green">$Encode$</span>$(x)$ has some desired property:
+								<ul>
+									<li class="fragment"><span class="green">$Encode$</span>$(x)$ typically has lower
+										dimensionality than $x$</li>
+									<li class="fragment"><span class="green">$Encode$</span>$(x)$ could be forced to be
+										sparse</li>
+									<li class="fragment"><span class="green">$Encode$</span>$(x)$ could be a
+										distribution which is sampled from before decoding...</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+
+				<section>
+					<div class="box" style="height:15em;">
+						<h4>Clause Autoencoder</h4>
+						<a href="https://arxiv.org/pdf/2101.09142.pdf">Purgal et al.</a>
+						<div class="r-stack" style="width:20em; height:10em;margin:auto;">
+							<img src="images/extractors.png" alt="extractors" class="fragment fade-in-then-out"
+								style="margin:auto;">
+							<img src="images/differenceTraining.png" alt="differenceTraining"
+								class="fragment fade-in-then-out" style="margin:auto;">
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<div class="box">
+						<h4>GNN $\geq$ LSTM/Transformers/etc</h4>
+						<div style="display:flex; flex-flow: row wrap; justify-content: space-around;">
+								<img src="images/ClauseAE1.svg" alt="ClauseAE1.svg" width="350">
+								<img src="images/ClauseAE2.svg" alt="ClauseAE2.svg" width="350">
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<div class="box" style="width:18em;margin:auto;">
+						<h4>Recursive Training</h4>
+						<a href="https://arxiv.org/pdf/2101.09142.pdf">Purgal et al.</a>
+						<img src="images/recursiveTraining.png" alt="recursiveTraining"
+							style="margin:auto;margin-top:10px;">
+					</div>
+				</section>
+
+				<section>
+					<div class="box">
+						<h4>Variational Clause Autoencoder</h4>
+						<img src="images/ClauseVAE.svg" alt="ClauseVAE.svg" width="600">
+					</div>
+				</section>
+			</section>
+
+			<section>
+				<h3>Model Evaluation</h3>
+				<section>
+					<div class="box">
+						<h4>Models to Evaluate</h4>
+						<ul>
+							<li>The Custom Model</li>
+							<li>The Simple 2-layer PyG GCN model</li>
+							<li>The Ordered DAG Autoencoder</li>
+							<li>The Variational Ordered DAG Autoencoder</li>
+						</ul>
+					</div>
+				</section>
+
+				<section>
+					<div class="box">
+						<h4>Explicit Clause Objectives</h4>
+						<ul style="font-size:0.8em;">
+							<li><span class="emph green">Horn</span> - Is a clause a Horn clause (at most one positive
+								literal)?</li>
+							<li><span class="emph green">NumNodes</span> - How many nodes does a clause graph contain?
+							</li>
+							<li><span class="emph green">NumDistinctVars</span> - How many distinct variables occur in
+								the clause?</li>
+							<li><span class="emph green">NumEqualities</span> - How many “=” symbols occur in the
+								clause?</li>
+							<li><span class="emph green">NumNegations</span> - How many negative literals are in the
+								clause?</li>
+							<li><span class="emph green">MaxDepth</span> - What is the maximum nesting of subterms in
+								the clause?</li>
+						</ul>
+					</div>
+				</section>
+
+
+				<section>
+					<div class="box" style="font-size:0.5em;">
+						<h4><span class="green emph">Horn</span> Explicit Clause Objectives</h4>
+						<img class="figure" src="images/Horn.png"><br>
+						
+						The four best performing models overlap and are all tied for 100% accuracy with the next four models all obtaining
+						accuracy above 99.5%. Overall, there are eight models that finish training with over 95% accuracy.
+						The three visible but distinctly poorly-performing embedding models (still 96%-97%) were all randomly initialized and were not allowed to update during training.
+					</div>
+				</section>
+
+				
+				
+				
+				<section>
+					<div class="box" style="font-size:0.5em;">
+						<h4><span class="green emph">NumNodes</span> Explicit Clause Objectives</h4>
+						<img class="figure" src="images/NumNodes.png"><br>
+						
+						The <span class="emph green">SimpleEmbedding</span> is roughly tied with the both the pretrained and "\_base" refined <span class="emph green">DAGEmbeddingGeom</span> models at ~93%.
+						The main insight from this plot (and many of these other plots) is that while a simple symbol counting embedding can encode the total number of nodes in a DAG,
+						embeddings (like the autoencoder embeddings) that obtain their final clause representation from the root node of a DAG fail to capture this information.
+					</div>
+				</section>
+				
+				
+				
+				<section>
+					<div class="box" style="font-size:0.5em;">
+						<h4><span class="green emph">NumDistinctVars</span> Explicit Clause Objectives</h4>
+						<img class="figure" src="images/NumDistinctVars.png"><br>
+						
+						The four best models for this objective are all <span class="emph green">DAGEmbeddingGeom and SimpleEmbedding</span> models.
+						Below the visible portion of this plot is <span class="emph green">RandomEmbedding</span> at approximately 25% accuracy, and 
+						<span class="emph green">VAEEmbedding, AEEmbedding\_base, and AEEmbedding</span> at approximately 40% accuracy.
+						This suggests that for this objective aggregation is again much more important than hierarchical processing.
+					</div>
+				</section>
+				
+				
+				
+				<section>
+					<div class="box" style="font-size:0.4em;">
+						<h4><span class="green emph">NumEqualities</span> Explicit Clause Objectives</h4>
+						<img class="figure" src="images/NumEqualities.png"><br>
+						
+						The <span class="emph green">SimpleEmbedding</span> does quite well at this task, probably because the sum of all random symbol vectors
+						includes the sum of all "=" symbol vectors. The classifier can then learn to extract this objective via a simple dot product 
+						of the <span class="emph green">SimpleEmbedding</span> output with the symbol vector for "=".
+						The unrefined autoencoding models fail because information about "=" is always either at depth two or three in the DAG, and that information
+						can easily be thrown away by a random initialization.
+						Below the visible portion of this plot is the <span class="emph green">RandomEmbedding</span> at approximately 59% accuracy.
+					</div>
+				</section>
+				
+				
+				
+				
+				<section>
+					<div class="box" style="font-size:0.5em;">
+						<h4><span class="green emph">NumNegations</span> Explicit Clause Objectives</h4>
+						<img class="figure" src="images/NumNegations.png"><br>
+						
+						Although <span class="emph green">NumNegations</span> should be just as easy to learn as <span class="emph green">NumEqualities</span> for <span class="emph green">SimpleEmbedding</span>,
+						<span class="emph green">SimpleEmbedding</span> fails to outperform the other models. Perhaps this is because the other models are all easily able to incorporate 
+						the necessary information into their embeddings (all "$\sim$" symbols occur as immediate children of the root), and 
+						because their additional parameters enable them to eliminate noise from other symbols.
+						Below the visible portion of this plot is the <span class="emph green">RandomEmbedding</span> at approximately 25% accuracy.
+					</div>
+				</section>
+				
+				
+				
+				
+				<section>
+					<div class="box" style="font-size:0.5em;">
+						<h4><span class="green emph">MaxDepth</span> Explicit Clause Objectives</h4>
+						<img class="figure" src="images/MaxDepth.png"><br>
+						
+						Recall that the autoencoding models use the root node of the DAG as the representation of the DAG, as opposed to the max pooling used by the other models.
+						In this plot, we see that the <span class="emph green">MaxDepth</span> objective is best learned by the refined autoencoding models, and that
+						the unrefined autoencoding models perform worst (on par with random embeddings at approximately 30%).
+					</div>
+				</section>
+				
+				
+
+				<section>
+					<div class="box">
+						<h4> <span class="green emph">Given Clause Selection</span> - unrefined embeddings</h4>
+						<img class="figure" src="images/unrefined.png">
+					</div>
+				</section>
+
+				<section>
+					<div class="box">
+						<h4> <span class="green emph">Given Clause Selection</span> - refined embeddings</h4>
+						<img class="figure" src="images/refined.png">
+					</div>
+				</section>
+
+			</section>
+
+
+			<section>
+				<h3>Conclusion and Insights</h3>
+				<div class="box small">
+					<ul>
+						<li class="fragment">Simple Models go a long way</li>
+						<li class="fragment">
+							Problem formulation is important
+							<ul>
+								<li class="fragment">Which clauses should the context include?</li>
+								<li class="fragment">Should the context change during training?</li>
+								<li class="fragment">Should (or how should) context clauses become a single context vector?</li>
+								<li class="fragment">How should context affect the given clause selection?</li>
+								<li class="fragment">How should given clauses be labelled?</li>
+								<li class="fragment">What forms of regularization is useful in this domain?</li>
+							</ul>
+						</li>
+						<li class="fragment">The failure of my clause autoencoders perhaps hints that the GNN models I've tried fail to incorporate data from deep in the tree.</li>
+					</ul>
+				</div>
+			</section>
+
+			<section>
+				<h3>Future Research</h3>
+				<ul style="font-size: 25pt;">
+					<li class="fragment">More nuanced labeling of training data</li>
+					<li class="fragment">Iterated Axiom Selection</li>
+					<li class="fragment">Improved Tools
+						<ul>
+							<li class="fragment">Simpler interaction with E.</li>
+							<li class="fragment">Unified data preprocessing, model training, and evaluation scripts.</li>
+						</ul>
+					</li>
+					<li class="fragment">Reinforcement learning</li>
+					<li class="fragment">Suggestions?</li>
+				</ul>
+			</section>
+
+			<section>
+				<h3>Questions?</h3>
+				<h4>Thanks</h4>
+			</section>
+
+		</div>
+	</div>
+
+	<script src="dist/reveal.js"></script>
+	<script src="plugin/math/math.js"></script>
+	<script src="plugin/notes/notes.js"></script>
+	<script src="plugin/markdown/markdown.js"></script>
+	<script src="plugin/highlight/highlight.js"></script>
+	<script>
+		// More info about initialization & config:
+		// - https://revealjs.com/initialization/
+		// - https://revealjs.com/config/
+		Reveal.initialize({
+			slideNumber: true,
+			hash: true,
+			math: {
+				mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+				config: 'TeX-AMS_HTML-full',
+				// pass other options into `MathJax.Hub.Config()`
+				TeX: { Macros: { RR: "{\\bf R}" } }
+			},
+			// Learn about plugins: https://revealjs.com/plugins/
+			plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath]
+		});
+	</script>
+</body>
+
+</html>
