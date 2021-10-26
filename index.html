@@ -148,6 +148,10 @@
 			width:650px;
 		}
 
+		.smallimg{
+			width:12em;
+		}
+
 	</style>
 	<div class="reveal">
 		<div class="slides">
@@ -182,11 +186,10 @@
 						<div class="box vertical fragment">
 							<h4>Propositional Logic</h4><br>
 							<ul>
-								<li class="fragment">Restrictively simple</li>
-								<li class="fragment">Boolean satisfiability is NP-Complete</li>
-								<li class="fragment">Surprisingly fast heuristic solvers exist nonetheless</li>
+								<li>Boolean satisfiability is NP-Complete</li>
+								<li>Surprisingly fast heuristic solvers exist nonetheless</li>
 							</ul>
-							<div class="fragment" style="border-top: 1px solid white; text-align:left; margin-top:1em;">
+							<div style="border-top: 1px solid white; text-align:left; margin-top:1em;">
 								<span class="ul">Example:</span><br>
 								<span class="green">
 									$ jack\_is\_happy \implies jack\_drank\_coffee$
@@ -197,11 +200,10 @@
 						<div class="box vertical fragment">
 							<h4>First Order Logic</h4><br>
 							<ul>
-								<li class="fragment">Complete (all tautologies are theorems)</li>
-								<li class="fragment">Semidecidable</li>
-								<li class="fragment">Practical for more real world problems</li>
+								<li>Complete (all tautologies are theorems)</li>
+								<li>Practical for more real world problems</li>
 							</ul>
-							<div class="fragment" style="border-top: 1px solid white; text-align:left; margin-top:1em;">
+							<div style="border-top: 1px solid white; text-align:left; margin-top:1em;">
 								<span class="ul">Example:</span><br>
 								<span class="green">
 									$ \forall X (happy(X) \implies drank(X, coffee)) $
@@ -212,10 +214,10 @@
 						<div class="box vertical fragment">
 							<h4>Typed First Order Logic</h4><br>
 							<ul>
-								<li class="fragment">Types allow for static type-checking to make problem formulation
+								<li>Types allow for static type-checking to make problem formulation
 									easier.</li>
 							</ul>
-							<div class="fragment" style="border-top: 1px solid white; text-align:left; margin-top:1em;">
+							<div style="border-top: 1px solid white; text-align:left; margin-top:1em;">
 								<span class="ul">Example:</span><br>
 								<span class="green">
 									$ \forall (X:person) (happy(X) \implies drank(X, coffee)) $
@@ -226,10 +228,10 @@
 						<div class="box vertical fragment">
 							<h4>Higher Order Logic</h4><br>
 							<ul>
-								<li class="fragment">Incomplete</li>
-								<li class="fragment">Quantification over functions/predicates</li>
-								<li class="fragment">Very expressive but very abstract</li>
-								<li class="fragment">Types help avoid Russell's Paradox</li>
+								<li>Incomplete</li>
+								<li>Quantification over functions/predicates</li>
+								<li>Very expressive but very abstract</li>
+								<li>Types help avoid Russell's Paradox</li>
 							</ul>
 							<!-- <div class="fragment" style="border-top: 1px solid white; text-align:left; margin-top:1em;">
 									<span class="ul">Example:</span><br>
@@ -352,6 +354,8 @@
 						problems leading up to a specific theorem in MML</li>
 					<li class="fragment"><a href="https://github.com/TPTPWorld/MPTPTP2078">MPTPTP2078</a> - A refined
 						version of MPTP2078</li>
+					
+					<li class="fragment">(Bushy variants are used in my research)</li>
 				</ul>
 
 			</section>
@@ -471,6 +475,27 @@
 						</ul>
 					</div>
 				</section>
+
+				<section>
+					<h4>Model Illustration - Traditional GNN/GCN</h4>
+					<div class="r-stack">
+						<img class="smallimg " src="images/async/Sync Dag Processing1.svg">
+						<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing2.svg">
+						<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing3.svg">
+						<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing4.svg">
+					</div>
+				</section>
+
+				<section>
+					<h4>Model Illustration - Custom Model</h4>
+					<div class="r-stack">
+						<img class="smallimg " src="images/async/Async Dag Processing1.svg">
+						<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing2.svg">
+						<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing3.svg">
+						<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing4.svg">
+					</div>
+				</section>
+
 
 				<section>
 					<div class="box">
@@ -593,9 +618,11 @@
 						<h4><span class="green emph">Horn</span> Explicit Clause Objectives</h4>
 						<img class="figure" src="images/Horn.png"><br>
 						
-						The four best performing models overlap and are all tied for 100% accuracy with the next four models all obtaining
-						accuracy above 99.5%. Overall, there are eight models that finish training with over 95% accuracy.
-						The three visible but distinctly poorly-performing embedding models (still 96%-97%) were all randomly initialized and were not allowed to update during training.
+						<aside class="notes">
+							The four best performing models overlap and are all tied for 100% accuracy with the next four models all obtaining
+							accuracy above 99.5%. Overall, there are eight models that finish training with over 95% accuracy.
+							The three visible but distinctly poorly-performing embedding models (still 96%-97%) were all randomly initialized and were not allowed to update during training.
+						</aside>
 					</div>
 				</section>
 
@@ -607,9 +634,11 @@
 						<h4><span class="green emph">NumNodes</span> Explicit Clause Objectives</h4>
 						<img class="figure" src="images/NumNodes.png"><br>
 						
-						The <span class="emph green">SimpleEmbedding</span> is roughly tied with the both the pretrained and "\_base" refined <span class="emph green">DAGEmbeddingGeom</span> models at ~93%.
-						The main insight from this plot (and many of these other plots) is that while a simple symbol counting embedding can encode the total number of nodes in a DAG,
-						embeddings (like the autoencoder embeddings) that obtain their final clause representation from the root node of a DAG fail to capture this information.
+						<aside class="notes">
+							The <span class="emph green">SimpleEmbedding</span> is roughly tied with the both the pretrained and "\_base" refined <span class="emph green">DAGEmbeddingGeom</span> models at ~93%.
+							The main insight from this plot (and many of these other plots) is that while a simple symbol counting embedding can encode the total number of nodes in a DAG,
+							embeddings (like the autoencoder embeddings) that obtain their final clause representation from the root node of a DAG fail to capture this information.
+						</aside>
 					</div>
 				</section>
 				
@@ -620,10 +649,12 @@
 						<h4><span class="green emph">NumDistinctVars</span> Explicit Clause Objectives</h4>
 						<img class="figure" src="images/NumDistinctVars.png"><br>
 						
-						The four best models for this objective are all <span class="emph green">DAGEmbeddingGeom and SimpleEmbedding</span> models.
-						Below the visible portion of this plot is <span class="emph green">RandomEmbedding</span> at approximately 25% accuracy, and 
-						<span class="emph green">VAEEmbedding, AEEmbedding\_base, and AEEmbedding</span> at approximately 40% accuracy.
-						This suggests that for this objective aggregation is again much more important than hierarchical processing.
+						<aside class="notes">
+							The four best models for this objective are all <span class="emph green">DAGEmbeddingGeom and SimpleEmbedding</span> models.
+							Below the visible portion of this plot is <span class="emph green">RandomEmbedding</span> at approximately 25% accuracy, and 
+							<span class="emph green">VAEEmbedding, AEEmbedding\_base, and AEEmbedding</span> at approximately 40% accuracy.
+							This suggests that for this objective aggregation is again much more important than hierarchical processing.
+						</aside>
 					</div>
 				</section>
 				
@@ -634,12 +665,14 @@
 						<h4><span class="green emph">NumEqualities</span> Explicit Clause Objectives</h4>
 						<img class="figure" src="images/NumEqualities.png"><br>
 						
-						The <span class="emph green">SimpleEmbedding</span> does quite well at this task, probably because the sum of all random symbol vectors
-						includes the sum of all "=" symbol vectors. The classifier can then learn to extract this objective via a simple dot product 
-						of the <span class="emph green">SimpleEmbedding</span> output with the symbol vector for "=".
-						The unrefined autoencoding models fail because information about "=" is always either at depth two or three in the DAG, and that information
-						can easily be thrown away by a random initialization.
-						Below the visible portion of this plot is the <span class="emph green">RandomEmbedding</span> at approximately 59% accuracy.
+						<aside class="notes">
+							The <span class="emph green">SimpleEmbedding</span> does quite well at this task, probably because the sum of all random symbol vectors
+							includes the sum of all "=" symbol vectors. The classifier can then learn to extract this objective via a simple dot product 
+							of the <span class="emph green">SimpleEmbedding</span> output with the symbol vector for "=".
+							The unrefined autoencoding models fail because information about "=" is always either at depth two or three in the DAG, and that information
+							can easily be thrown away by a random initialization.
+							Below the visible portion of this plot is the <span class="emph green">RandomEmbedding</span> at approximately 59% accuracy.
+						</aside>
 					</div>
 				</section>
 				
@@ -651,11 +684,13 @@
 						<h4><span class="green emph">NumNegations</span> Explicit Clause Objectives</h4>
 						<img class="figure" src="images/NumNegations.png"><br>
 						
-						Although <span class="emph green">NumNegations</span> should be just as easy to learn as <span class="emph green">NumEqualities</span> for <span class="emph green">SimpleEmbedding</span>,
-						<span class="emph green">SimpleEmbedding</span> fails to outperform the other models. Perhaps this is because the other models are all easily able to incorporate 
-						the necessary information into their embeddings (all "$\sim$" symbols occur as immediate children of the root), and 
-						because their additional parameters enable them to eliminate noise from other symbols.
-						Below the visible portion of this plot is the <span class="emph green">RandomEmbedding</span> at approximately 25% accuracy.
+						<aside class="notes">
+							Although <span class="emph green">NumNegations</span> should be just as easy to learn as <span class="emph green">NumEqualities</span> for <span class="emph green">SimpleEmbedding</span>,
+							<span class="emph green">SimpleEmbedding</span> fails to outperform the other models. Perhaps this is because the other models are all easily able to incorporate 
+							the necessary information into their embeddings (all "$\sim$" symbols occur as immediate children of the root), and 
+							because their additional parameters enable them to eliminate noise from other symbols.
+							Below the visible portion of this plot is the <span class="emph green">RandomEmbedding</span> at approximately 25% accuracy.
+						</aside>
 					</div>
 				</section>
 				
@@ -667,9 +702,11 @@
 						<h4><span class="green emph">MaxDepth</span> Explicit Clause Objectives</h4>
 						<img class="figure" src="images/MaxDepth.png"><br>
 						
-						Recall that the autoencoding models use the root node of the DAG as the representation of the DAG, as opposed to the max pooling used by the other models.
-						In this plot, we see that the <span class="emph green">MaxDepth</span> objective is best learned by the refined autoencoding models, and that
-						the unrefined autoencoding models perform worst (on par with random embeddings at approximately 30%).
+						<aside class="notes">
+							Recall that the autoencoding models use the root node of the DAG as the representation of the DAG, as opposed to the max pooling used by the other models.
+							In this plot, we see that the <span class="emph green">MaxDepth</span> objective is best learned by the refined autoencoding models, and that
+							the unrefined autoencoding models perform worst (on par with random embeddings at approximately 30%).
+						</aside>
 					</div>
 				</section>
 				
@@ -700,12 +737,12 @@
 						<li class="fragment">
 							Problem formulation is important
 							<ul>
-								<li class="fragment">Which clauses should the context include?</li>
-								<li class="fragment">Should the context change during training?</li>
-								<li class="fragment">Should (or how should) context clauses become a single context vector?</li>
-								<li class="fragment">How should context affect the given clause selection?</li>
-								<li class="fragment">How should given clauses be labelled?</li>
-								<li class="fragment">What forms of regularization is useful in this domain?</li>
+								<li>Which clauses should the context include?</li>
+								<li>Should the context change during training?</li>
+								<li>Should (or how should) context clauses become a single context vector?</li>
+								<li>How should context affect the given clause selection?</li>
+								<li>How should given clauses be labelled?</li>
+								<li>What forms of regularization is useful in this domain?</li>
 							</ul>
 						</li>
 						<li class="fragment">The failure of my clause autoencoders perhaps hints that the GNN models I've tried fail to incorporate data from deep in the tree.</li>
