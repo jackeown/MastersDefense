@@ -41,7 +41,9 @@
 		}
 
 		.box {
-			border: 2px solid grey;
+			/* background:rgba(200,200,200,0.1);*/
+			box-shadow:2px 2px 15px -3px rgba(50,50,50,1.0);
+			border: 2px solid rgb(80,80,80);
 			padding: 15px;
 			margin: 5px;
 			font-size: 24pt;
@@ -169,6 +171,7 @@
 						<li><span style="color:whitesmoke;">Given Clause Selection</span></li>
 						<li><span style="color:whitesmoke;">Research Goals</span></li>
 						<li><span style="color:whitesmoke;">MPTPTP2078 Dataset</span></li>
+						<li><span style="color:whitesmoke;">The E Theorem Prover</span></li>
 						<li><span style="color:whitesmoke;">Previous Work</span></li>
 						<li><span style="color:whitesmoke;">Supervised Approaches</span></li>
 						<li><span style="color:whitesmoke;">Unsupervised Approaches</span></li>
@@ -253,8 +256,6 @@
 								set of formulae under a set of inference rules.</li>
 							<li class="fragment">Proofs by contradiction via saturating $axioms \cup \{\neg
 								conjecture\}$</li>
-							<li class="fragment"><a href="https://eprover.org">Eprover</a> - state of the art first
-								order saturation based theorem prover written in C</li>
 						</ul>
 					</div>
 				</section>
@@ -263,6 +264,9 @@
 			<section id="GCS">
 				<h3>Given Clause Selection</h3>
 				<img src="images/processedAndUnprocessedSets.svg">
+				<ul>
+					<li style="font-size: 0.7em;">Improving given clause selection is a core goal of ATP research</li>
+				</ul>
 			</section>
 
 			<section id="researchGoals">
@@ -347,17 +351,32 @@
 
 			<section id="MPTPTP2078">
 				<h3>MPTPTP2078 Dataset</h3>
-				<ul>
-					<li class="fragment">Mizar Mathematical Library</li>
-					<li class="fragment"><a href="https://github.com/JUrban/MPTP2078">MPTP2078</a> - <span
-							class="emph green">bushy</span> and <span class="emph red">chainy</span> variants of 2078
-						problems leading up to a specific theorem in MML</li>
-					<li class="fragment"><a href="https://github.com/TPTPWorld/MPTPTP2078">MPTPTP2078</a> - A refined
-						version of MPTP2078</li>
-					
-					<li class="fragment">(Bushy variants are used in my research)</li>
-				</ul>
+				<div class="box" style="font-size:0.8em;">
+					<ul>
+						<li class="fragment">Mizar Mathematical Library</li>
+						<li class="fragment"><a href="https://github.com/JUrban/MPTP2078">MPTP2078</a> - <span
+								class="emph green">bushy</span> and <span class="emph red">chainy</span> variants of 2078
+							problems leading up to a specific theorem in MML</li>
+						<li class="fragment"><a href="https://github.com/TPTPWorld/MPTPTP2078">MPTPTP2078</a> - A refined
+							version of MPTP2078</li>
+						
+						<li class="fragment">(Bushy variants are used in my research)</li>
+					</ul>
+				</div>
+			</section>
 
+			<section>
+				<h3>The E Theorem Prover</h3>
+				<div class="box">
+					<ul>
+						<li>
+							<a href="https://eprover.org">E</a> is a state of the art first
+							order saturation based theorem prover written in C by 
+							<a href="https://wwwlehre.dhbw-stuttgart.de/~sschulz/DHBW_Stephan_Schulz/Stephan_Schulz.html">Dr. Stephan Schulz</a>
+						</li>
+						<li>E supports custom clause evaluation functions.</li>
+					</ul>
+				</div>
 			</section>
 
 			<section id="previousWork">
