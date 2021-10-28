@@ -151,7 +151,7 @@
 		}
 
 		.smallimg{
-			width:12em;
+			width:21rem;
 		}
 
 	</style>
@@ -234,7 +234,7 @@
 								<li>Incomplete</li>
 								<li>Quantification over functions/predicates</li>
 								<li>Very expressive but very abstract</li>
-								<li>Types help avoid Russell's Paradox</li>
+								<li>Types necessary to avoid Russell's Paradox</li>
 							</ul>
 							<!-- <div class="fragment" style="border-top: 1px solid white; text-align:left; margin-top:1em;">
 									<span class="ul">Example:</span><br>
@@ -244,6 +244,11 @@
 								</div> -->
 						</div>
 					</div>
+
+					<aside class="notes">
+						Automated Reasoning is the study of logic from a computational perspective.
+						The simplest form of logic is propositional logic.
+					</aside>
 				</section>
 
 				<section>
@@ -259,14 +264,32 @@
 						</ul>
 					</div>
 				</section>
+
 			</section>
 
 			<section id="GCS">
 				<h3>Given Clause Selection</h3>
-				<img src="images/processedAndUnprocessedSets.svg">
-				<ul>
-					<li style="font-size: 0.7em;">Improving given clause selection is a core goal of ATP research</li>
-				</ul>
+
+				<section>
+					<div class="box">
+						<h4>Converting Formulae to Clauses</h4>
+						<span class="red">$$\forall X \exists Y (p(Y) \; | \; (q \; \& \; r(X)))$$</span>
+						becomes<br><br>
+						$\{\; $<span class="green">$p(sk(X))\;|\;q$</span>$,\;$ <span class="green">$p(sk(X))\;|\;r(X)$</span>$ \;\} $
+					</div>
+				</section>
+
+				<section>
+					<img src="images/processedAndUnprocessedSets.svg">
+					<ul>
+						<li style="font-size: 0.7em;">Improving given clause selection is a core goal of ATP research</li>
+					</ul>
+				</section>
+
+				<aside class="notes">
+					Saturation based theorem provers typically convert first order formulae into clauses.
+					Clauses have no "and" internally and have only universally quantified variables.
+				</aside>
 			</section>
 
 			<section id="researchGoals">
@@ -301,6 +324,18 @@
 							$$
 						</div>
 					</div>
+				</section>
+
+				<section>
+					<div style="font-family: monospace; font-size:0.8em;">
+						p<span class="green">(</span>f<span class="red">(</span>X,a<span class="red">)</span>,
+						a<span class="green">)</span>
+						|
+						q<span class="green">(</span>f<span class="red">(</span>X,a<span class="red">)</span>,
+						g<span class="red">(</span>a,b,c<span class="red">)</span><span class="green">)</span>
+						| c!=s
+					</div>
+					<img src="images/clauseDag.png">
 				</section>
 
 				<section>
@@ -384,8 +419,17 @@
 				<section>
 					<div class="box" style="font-size:0.6em;">
 						<h4>Graph Neural Networks (GNNs)</h4>
-						The term <span class="green">Graph Neural Network</span> was coined in 2005 by Gori et al:
-						<blockquote></li>
+						<ul>
+							<li>
+								The term <span class="green">Graph Neural Network</span> was coined in 2005 by Gori et al.
+							</li>
+							<li>Nodes have feature vectors.</li>
+							<li>Nodes get updated as a function of the sum of their neighbors' feature vectors.</li>
+						</ul>
+						<img class="smallimg" src="images/propagation.svg">
+						$$ x_i = \displaystyle f(x_i, \sum_{x_j \in N(x_i)} x_j) $$
+
+						<!-- <blockquote></li>
 							More precisely, let $w$ be a
 							set of parameters and $f_w$ be a parametric transition function
 							that expresses the dependence of a node on its neighborhood.
@@ -401,7 +445,7 @@
 							<li>$f_w$ is a fully connected neural net</li>
 							<li>$x_{ne[n]}$ are summed.</li>
 							<li>$l_{ne[n]}$ are summed.</li>
-						</ul>
+						</ul> -->
 					</div>
 				</section>
 
@@ -410,9 +454,10 @@
 						<h4>Graph Convolutional Networks (GCNs)</h4>
 						<ul>
 							<li>Defined in 2017 by Kipf and Welling</li>
-							<li>$H^{(l+1)}= \sigma\!\left(\tilde{D}^{-\frac{1}{2}} \tilde{A}\tilde{D}^{-\frac{1}{2}}H^{(l)} W^{(l)} \right) \, $</li>
+							<li>Fixes problem where nodes with high degree drown out other nodes</li>
+							<!-- <li>$H^{(l+1)}= \sigma\!\left(\tilde{D}^{-\frac{1}{2}} \tilde{A}\tilde{D}^{-\frac{1}{2}}H^{(l)} W^{(l)} \right) \, $</li>
 							<li>$\tilde{D}^{-\frac{1}{2}} \tilde{A}\tilde{D}^{-\frac{1}{2}}$ does not require explicit access to the adjacency matrix.</li>
-							<li>Has the effect of <span class="emph">quieting</span> the nodes with large degree.</li>
+							<li>Has the effect of <span class="emph">quieting</span> the nodes with large degree.</li> -->
 						</ul>
 					</div>
 				</section>
@@ -421,30 +466,13 @@
 					<div class="box" style="font-size:0.5em;">
 						<h4>Message Passing Neural Networks (MPNNs)</h4>
 
-						MPNNs described in the language of Gilmer et al.:
-						<blockquote>
-							The message passing phase runs for $T$ time steps and is defined in terms of message functions $M_t$
-							and vertex update functions $U_t$.
-
-
-							During the message passing phase, hidden states $h_v^t$
-							at each node in the graph are
-							updated based on messages 
-							$m_v^{t+1}$ according to
-
-							\begin{eqnarray}
-							m_v^{t+1} &=& \sum_{w \in N(v)} M_t(h_v^t, h_w^t, e_{vw})\\
-							h_v^{t+1} &=& U_t(h_v^t, m_v^{t+1})
-							\end{eqnarray}
+						<ul>
+							<li>Introduced by Gilmer et al. in 2017</li>
+							<li>Messages are calculated for each edge: $M(a,e,b)$.</li>
+							<li>Messages coming into a given node are summed and used to update node state as in normal GNNs.</li>
+						</ul><br>
+						<img src="images/edgeMessage.svg" class="smallimg">
 						
-							where in the sum, $N(v)$ denotes the neighbors of $v$ in graph
-							$G$. 
-							
-							The readout phase computes a feature vector for the
-							whole graph using some readout function $R$ according    
-						
-							$$\hat{y} = R(\{h_v^T | v\in G\})$$
-						</blockquote>
 					</div>
 				</section>
 
@@ -454,82 +482,9 @@
 						<ul>
 							<li>TreeLSTM / DagLSTM</li>
 							<li>Recursive Neural Networks (not recurrent)</li>
-
 						</ul>
 					</div>
 				</section>
-
-				<section>
-					<div class="box" style="font-size:0.7em;">
-						<h4>Machine Learning for ATP</h4>
-						<ul>
-							<li><span class="green">Google:</span> HolStep dataset and GNNs for higher order logic</li>
-							<li><span class="green">Enigma:</span> GCS using hand crafted features classified with XGBoost</li>
-							<li><span class="green">Enigma-NG:</span> Recursive Neural Network</li>
-						</ul>
-					</div>
-				</section>
-			</section>
-
-			<section>
-				<h3>Supervised Approaches</h3>
-				<section>
-					<div class="box">
-						<h4>Custom Model</h4>
-						<ul>
-							<li><span class="emph green">Asynchronous message passing</span> (uses topological sorting)</li>
-							<li><span class="emph green">Attention</span> instead of simple sum</li>
-							<li><span class="emph green">Readout via root</span> rather than via global pooling</li>
-							<li><span class="red">Hard to parallelize (super slow)</span></li>
-						</ul>
-					</div>
-				</section>
-
-				<section>
-					<div class="box">
-						<h4>2-Layer PyTorch Geometric (PyG) GCN</h4>
-						<ul>
-							<li> <span class="green">Simple</span></li>
-							<li> <span class="green">Parallelism handled by PyG</span></li>
-						</ul>
-					</div>
-				</section>
-
-				<section>
-					<h4>Model Illustration - Traditional GNN/GCN</h4>
-					<div class="r-stack">
-						<img class="smallimg " src="images/async/Sync Dag Processing1.svg">
-						<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing2.svg">
-						<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing3.svg">
-						<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing4.svg">
-					</div>
-				</section>
-
-				<section>
-					<h4>Model Illustration - Custom Model</h4>
-					<div class="r-stack">
-						<img class="smallimg " src="images/async/Async Dag Processing1.svg">
-						<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing2.svg">
-						<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing3.svg">
-						<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing4.svg">
-					</div>
-				</section>
-
-
-				<section>
-					<div class="box">
-						<h4>Classifiers</h4>
-						<ul>
-							<li>Both clause embedding models are trained with the same classifier architecture</li>
-							<li>The classifier sums the context vectors and then concatenates this sum with the given clause vector</li>
-							<li>This concatwereenation then goes through a simple 2-layer MLP with ReLU activations</li>
-						</ul>
-					</div>
-				</section>
-			</section>
-
-			<section>
-				<h3>Unsupervised Approaches</h3>
 
 				<section>
 					<div class="box" style="font-size:0.7em;">
@@ -558,8 +513,71 @@
 				</section>
 
 				<section>
+					<div class="box" style="font-size:0.7em;">
+						<h4>Machine Learning for ATP</h4>
+						<ul>
+							<li><span class="green">Google:</span> HolStep dataset and GNNs for higher order logic</li>
+							<li><span class="green">Enigma:</span> Hand crafted features classified with XGBoost</li>
+							<li><span class="green">Enigma-NG:</span> Recursive Neural Network</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+
+			<section>
+				<h3>Supervised Approaches</h3>
+				<section>
+					<div class="box" style="font-size:0.65em;">
+						<h4 style="color:rgb(150, 255, 150);" class="emph">My Custom Model</h4>
+						<ul>
+							<li><span class="emph green">Asynchronous message passing</span> (uses topological sorting)</li>
+							<li><span class="emph green">Attention</span> instead of simple sum</li>
+							<li><span class="emph green">Readout via root</span> rather than via global pooling</li>
+							<li><span class="red">Hard to parallelize (super slow)</span></li>
+						</ul>
+						<div class="r-stack">
+							<img class="smallimg " src="images/async/Async Dag Processing1.svg">
+							<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing2.svg">
+							<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing3.svg">
+							<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing4.svg">
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<div class="box">
+						<h4 style="color:rgb(150, 255, 150);" class="emph">My 2-Layer PyTorch Geometric (PyG) GCN</h4>
+						<ul>
+							<li> <span class="green">Simple</span></li>
+							<li> <span class="green">Parallelism handled by PyG</span></li>
+						</ul>
+						<div class="r-stack">
+							<img class="smallimg " src="images/async/Sync Dag Processing1.svg">
+							<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing2.svg">
+							<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing3.svg">
+							<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing4.svg">
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<div class="box">
+						<h4>Classifiers</h4>
+						<ul>
+							<li>Both clause embedding models are trained with the same classifier architecture</li>
+							<li>The classifier sums the context vectors and then concatenates this sum with the given clause vector</li>
+							<li>This concatenation then goes through a simple MLP with ReLU activation</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+
+			<section>
+				<h3>Unsupervised Approaches</h3>
+
+				<section>
 					<div class="box" style="height:15em;">
-						<h4>Clause Autoencoder</h4>
+						<h4>Formulae Autoencoder</h4>
 						<a href="https://arxiv.org/pdf/2101.09142.pdf">Purgal et al.</a>
 						<div class="r-stack" style="width:20em; height:10em;margin:auto;">
 							<img src="images/extractors.png" alt="extractors" class="fragment fade-in-then-out"
@@ -573,6 +591,7 @@
 				<section>
 					<div class="box">
 						<h4>GNN $\geq$ LSTM/Transformers/etc</h4>
+						<div class="green emph">(My Clause Autoencoder)</div>
 						<div style="display:flex; flex-flow: row wrap; justify-content: space-around;">
 								<img src="images/ClauseAE1.svg" alt="ClauseAE1.svg" width="350">
 								<img src="images/ClauseAE2.svg" alt="ClauseAE2.svg" width="350">
@@ -591,7 +610,7 @@
 
 				<section>
 					<div class="box">
-						<h4>Variational Clause Autoencoder</h4>
+						<h5 class="emph" style="color:rgb(150, 255, 150);">My Variational Clause Autoencoder</h5>
 						<img src="images/ClauseVAE.svg" alt="ClauseVAE.svg" width="600">
 					</div>
 				</section>
@@ -603,10 +622,10 @@
 					<div class="box">
 						<h4>Models to Evaluate</h4>
 						<ul>
-							<li>The Custom Model</li>
-							<li>The Simple 2-layer PyG GCN model</li>
-							<li>The Ordered DAG Autoencoder</li>
-							<li>The Variational Ordered DAG Autoencoder</li>
+							<li>My Custom Model</li>
+							<li>My Simple 2-layer PyG GCN model</li>
+							<li>My Ordered DAG Autoencoder</li>
+							<li>My Variational Ordered DAG Autoencoder</li>
 						</ul>
 					</div>
 				</section>
@@ -633,6 +652,33 @@
 
 
 				<section>
+					<h4>Overview</h4>
+					<div class="box small">
+						<!-- Which models work well for which objectives? -->
+						<!-- AE/VAE vs GCN vs SimpleEmbedding -->
+						<!-- <table>
+							<tr><th></th><th></th><th></th></tr>
+							<tr><th>c</th><td>hello</td><td>hello</td></tr>
+							<tr><th>d</th><td>hello</td><td>hello</td></tr>
+						</table>
+						<br> -->
+						<ul>
+							<li>Autoencoder models summarize DAGs by their root, while the GCN model summarizes DAGs by global pooling</li>
+							<li><span class="green emph">MaxDepth</span> Objective benefits greatly from root summary</li>
+							<li>
+								A simple vector of symbol counts leads to the highest (or tied for highest)
+								accuracy in the <span class="green emph">NumNodes</span> and <span class="green emph">NumEqualities</span> objectives.
+							</li>
+							<li>
+								The <span class="green emph">NumDistinctVars</span> objective accuracy was maximized by the GCN model
+								and the autoencoding models yielded lower accuracy. (98% vs 99.5%)
+							</li>
+						</ul>
+					</div>
+				</section>
+
+
+				<section>
 					<div class="box" style="font-size:0.5em;">
 						<h4><span class="green emph">Horn</span> Explicit Clause Objectives</h4>
 						<img class="figure" src="images/Horn.png"><br>
@@ -645,8 +691,7 @@
 					</div>
 				</section>
 
-				
-				
+			
 				
 				<section>
 					<div class="box" style="font-size:0.5em;">
@@ -732,19 +777,14 @@
 				
 
 				<section>
-					<div class="box">
-						<h4> <span class="green emph">Given Clause Selection</span> - unrefined embeddings</h4>
-						<img class="figure" src="images/unrefined.png">
+					<div>
+						<h4> <span class="green emph">Given Clause Selection</span></h4>
+						<div class="row" style="gap:1em;">
+							<img class="figure" src="images/unrefined.png">
+							<img class="figure" src="images/refined.png">
+						</div>
 					</div>
 				</section>
-
-				<section>
-					<div class="box">
-						<h4> <span class="green emph">Given Clause Selection</span> - refined embeddings</h4>
-						<img class="figure" src="images/refined.png">
-					</div>
-				</section>
-
 			</section>
 
 
@@ -761,7 +801,7 @@
 								<li>Should (or how should) context clauses become a single context vector?</li>
 								<li>How should context affect the given clause selection?</li>
 								<li>How should given clauses be labelled?</li>
-								<li>What forms of regularization is useful in this domain?</li>
+								<li>What forms of regularization are useful in this domain?</li>
 							</ul>
 						</li>
 						<li class="fragment">The failure of my clause autoencoders perhaps hints that the GNN models I've tried fail to incorporate data from deep in the tree.</li>
@@ -771,23 +811,29 @@
 
 			<section>
 				<h3>Future Research</h3>
-				<ul style="font-size: 25pt;">
-					<li class="fragment">More nuanced labeling of training data</li>
-					<li class="fragment">Iterated Axiom Selection</li>
-					<li class="fragment">Improved Tools
-						<ul>
-							<li class="fragment">Simpler interaction with E</li>
-							<li class="fragment">Unified data preprocessing, model training, and evaluation scripts</li>
-						</ul>
-					</li>
-					<li class="fragment">Reinforcement learning</li>
-					<li class="fragment">Suggestions?</li>
-				</ul>
+				<div class="box small">
+					<ul>
+						<li class="fragment">More nuanced labeling of training data</li>
+						<!-- <li class="fragment">Iterated Axiom Selection</li> -->
+						<li class="fragment">Improved Tools
+							<ul>
+								<li class="fragment">Simpler interaction with E</li>
+								<li class="fragment">Unified data preprocessing, model training, and evaluation scripts</li>
+							</ul>
+						</li>
+						<li class="fragment">Reinforcement learning</li>
+						<li class="fragment">Suggestions?</li>
+					</ul>
+				</div>
 			</section>
 
 			<section>
 				<h3>Questions?</h3>
 				<h4>Thank you</h4>
+			</section>
+
+			<section>
+
 			</section>
 
 		</div>
