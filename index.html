@@ -679,102 +679,77 @@
 
 
 				<section>
-					<div class="box" style="font-size:0.5em;">
-						<h4><span class="green emph">Horn</span> Explicit Clause Objectives</h4>
-						<img class="figure" src="images/Horn.png"><br>
-						
-						<aside class="notes">
-							The four best performing models overlap and are all tied for 100% accuracy with the next four models all obtaining
-							accuracy above 99.5%. Overall, there are eight models that finish training with over 95% accuracy.
-							The three visible but distinctly poorly-performing embedding models (still 96%-97%) were all randomly initialized and were not allowed to update during training.
-						</aside>
-					</div>
-				</section>
+					<div class="r-stack">
+						<div class="box fragment fade-in-then-out" style="font-size:0.5em;">
+							<h4><span class="green emph">Horn</span> Explicit Clause Objectives</h4>
+							<img class="figure" src="images/Horn.png"><br>
+							
+							<aside class="notes">
+								The four best performing models overlap and are all tied for 100% accuracy with the next four models all obtaining
+								accuracy above 99.5%. Overall, there are eight models that finish training with over 95% accuracy.
+								The three visible but distinctly poorly-performing embedding models (still 96%-97%) were all randomly initialized and were not allowed to update during training.
+							</aside>
+						</div>
 
-			
-				
-				<section>
-					<div class="box" style="font-size:0.5em;">
-						<h4><span class="green emph">NumNodes</span> Explicit Clause Objectives</h4>
-						<img class="figure" src="images/NumNodes.png"><br>
-						
-						<aside class="notes">
-							The <span class="emph green">SimpleEmbedding</span> is roughly tied with the both the pretrained and "\_base" refined <span class="emph green">DAGEmbeddingGeom</span> models at ~93%.
-							The main insight from this plot (and many of these other plots) is that while a simple symbol counting embedding can encode the total number of nodes in a DAG,
-							embeddings (like the autoencoder embeddings) that obtain their final clause representation from the root node of a DAG fail to capture this information.
-						</aside>
+						<div class="box fragment fade-in-then-out" style="font-size:0.5em;">
+							<h4><span class="green emph">NumNodes</span> Explicit Clause Objective</h4>
+							<img class="figure" src="images/NumNodes.png"><br>
+							
+							<aside class="notes">
+								The <span class="emph green">SimpleEmbedding</span> is roughly tied with the both the pretrained and "\_base" refined <span class="emph green">DAGEmbeddingGeom</span> models at ~93%.
+								The main insight from this plot (and many of these other plots) is that while a simple symbol counting embedding can encode the total number of nodes in a DAG,
+								embeddings (like the autoencoder embeddings) that obtain their final clause representation from the root node of a DAG fail to capture this information.
+							</aside>
+						</div>
+
+						<div class="box fragment fade-in-then-out" style="font-size:0.5em;">
+							<h4><span class="green emph">NumDistinctVars</span> Explicit Clause Objective</h4>
+							<img class="figure" src="images/NumDistinctVars.png"><br>
+							
+							<aside class="notes">
+								The four best models for this objective are all <span class="emph green">DAGEmbeddingGeom and SimpleEmbedding</span> models.
+								Below the visible portion of this plot is <span class="emph green">RandomEmbedding</span> at approximately 25% accuracy, and 
+								<span class="emph green">VAEEmbedding, AEEmbedding\_base, and AEEmbedding</span> at approximately 40% accuracy.
+								This suggests that for this objective aggregation is again much more important than hierarchical processing.
+							</aside>
+						</div>
+						<div class="box fragment fade-in-then-out" style="font-size:0.5em;">
+							<h4><span class="green emph">NumEqualities</span> Explicit Clause Objective</h4>
+							<img class="figure" src="images/NumEqualities.png"><br>
+							
+							<aside class="notes">
+								The <span class="emph green">SimpleEmbedding</span> does quite well at this task, probably because the sum of all random symbol vectors
+								includes the sum of all "=" symbol vectors. The classifier can then learn to extract this objective via a simple dot product 
+								of the <span class="emph green">SimpleEmbedding</span> output with the symbol vector for "=".
+								The unrefined autoencoding models fail because information about "=" is always either at depth two or three in the DAG, and that information
+								can easily be thrown away by a random initialization.
+								Below the visible portion of this plot is the <span class="emph green">RandomEmbedding</span> at approximately 59% accuracy.
+							</aside>
+						</div>
+						<div class="box fragment fade-in-then-out" style="font-size:0.5em;">
+							<h4><span class="green emph">NumNegations</span> Explicit Clause Objective</h4>
+							<img class="figure" src="images/NumNegations.png"><br>
+							
+							<aside class="notes">
+								Although <span class="emph green">NumNegations</span> should be just as easy to learn as <span class="emph green">NumEqualities</span> for <span class="emph green">SimpleEmbedding</span>,
+								<span class="emph green">SimpleEmbedding</span> fails to outperform the other models. Perhaps this is because the other models are all easily able to incorporate 
+								the necessary information into their embeddings (all "$\sim$" symbols occur as immediate children of the root), and 
+								because their additional parameters enable them to eliminate noise from other symbols.
+								Below the visible portion of this plot is the <span class="emph green">RandomEmbedding</span> at approximately 25% accuracy.
+							</aside>
+						</div>
+						<div class="box fragment fade-in-then-out" style="font-size:0.5em;">
+							<h4><span class="green emph">MaxDepth</span> Explicit Clause Objective</h4>
+							<img class="figure" src="images/MaxDepth.png"><br>
+							
+							<aside class="notes">
+								Recall that the autoencoding models use the root node of the DAG as the representation of the DAG, as opposed to the max pooling used by the other models.
+								In this plot, we see that the <span class="emph green">MaxDepth</span> objective is best learned by the refined autoencoding models, and that
+								the unrefined autoencoding models perform worst (on par with random embeddings at approximately 30%).
+							</aside>
+						</div>
 					</div>
 				</section>
-				
-				
-				
-				<section>
-					<div class="box" style="font-size:0.5em;">
-						<h4><span class="green emph">NumDistinctVars</span> Explicit Clause Objectives</h4>
-						<img class="figure" src="images/NumDistinctVars.png"><br>
-						
-						<aside class="notes">
-							The four best models for this objective are all <span class="emph green">DAGEmbeddingGeom and SimpleEmbedding</span> models.
-							Below the visible portion of this plot is <span class="emph green">RandomEmbedding</span> at approximately 25% accuracy, and 
-							<span class="emph green">VAEEmbedding, AEEmbedding\_base, and AEEmbedding</span> at approximately 40% accuracy.
-							This suggests that for this objective aggregation is again much more important than hierarchical processing.
-						</aside>
-					</div>
-				</section>
-				
-				
-				
-				<section>
-					<div class="box" style="font-size:0.4em;">
-						<h4><span class="green emph">NumEqualities</span> Explicit Clause Objectives</h4>
-						<img class="figure" src="images/NumEqualities.png"><br>
-						
-						<aside class="notes">
-							The <span class="emph green">SimpleEmbedding</span> does quite well at this task, probably because the sum of all random symbol vectors
-							includes the sum of all "=" symbol vectors. The classifier can then learn to extract this objective via a simple dot product 
-							of the <span class="emph green">SimpleEmbedding</span> output with the symbol vector for "=".
-							The unrefined autoencoding models fail because information about "=" is always either at depth two or three in the DAG, and that information
-							can easily be thrown away by a random initialization.
-							Below the visible portion of this plot is the <span class="emph green">RandomEmbedding</span> at approximately 59% accuracy.
-						</aside>
-					</div>
-				</section>
-				
-				
-				
-				
-				<section>
-					<div class="box" style="font-size:0.5em;">
-						<h4><span class="green emph">NumNegations</span> Explicit Clause Objectives</h4>
-						<img class="figure" src="images/NumNegations.png"><br>
-						
-						<aside class="notes">
-							Although <span class="emph green">NumNegations</span> should be just as easy to learn as <span class="emph green">NumEqualities</span> for <span class="emph green">SimpleEmbedding</span>,
-							<span class="emph green">SimpleEmbedding</span> fails to outperform the other models. Perhaps this is because the other models are all easily able to incorporate 
-							the necessary information into their embeddings (all "$\sim$" symbols occur as immediate children of the root), and 
-							because their additional parameters enable them to eliminate noise from other symbols.
-							Below the visible portion of this plot is the <span class="emph green">RandomEmbedding</span> at approximately 25% accuracy.
-						</aside>
-					</div>
-				</section>
-				
-				
-				
-				
-				<section>
-					<div class="box" style="font-size:0.5em;">
-						<h4><span class="green emph">MaxDepth</span> Explicit Clause Objectives</h4>
-						<img class="figure" src="images/MaxDepth.png"><br>
-						
-						<aside class="notes">
-							Recall that the autoencoding models use the root node of the DAG as the representation of the DAG, as opposed to the max pooling used by the other models.
-							In this plot, we see that the <span class="emph green">MaxDepth</span> objective is best learned by the refined autoencoding models, and that
-							the unrefined autoencoding models perform worst (on par with random embeddings at approximately 30%).
-						</aside>
-					</div>
-				</section>
-				
-				
 
 				<section>
 					<div>
