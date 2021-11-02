@@ -170,9 +170,7 @@
 						<li><span style="color:whitesmoke;">Introduction to Automated Reasoning</li>
 						<li><span style="color:whitesmoke;">Given Clause Selection</span></li>
 						<li><span style="color:whitesmoke;">Research Goals</span></li>
-						<li><span style="color:whitesmoke;">MPTPTP2078 Dataset</span></li>
-						<li><span style="color:whitesmoke;">The E Theorem Prover</span></li>
-						<li><span style="color:whitesmoke;">Previous Work</span></li>
+						<li><span style="color:whitesmoke;">Tools and Previous Work</span></li>
 						<li><span style="color:whitesmoke;">Supervised Approaches</span></li>
 						<li><span style="color:whitesmoke;">Unsupervised Approaches</span></li>
 						<li><span style="color:whitesmoke;">Results</span></li>
@@ -185,8 +183,12 @@
 				<h3>Automated Reasoning</h3>
 
 				<section>
+					Automated reasoning $$ \approx $$ the study of logic using computational methods
+				</section>
+
+				<section>
 					<div class="twoOverTwoGrid">
-						<div class="box vertical fragment">
+						<div class="box vertical">
 							<h4>Propositional Logic</h4><br>
 							<ul>
 								<li>Boolean satisfiability is NP-Complete</li>
@@ -272,7 +274,7 @@
 
 				<section>
 					<div class="box">
-						<h4>Converting Formulae to Clauses</h4>
+						<h4>Theorem Provers convert Formulae to Clauses</h4>
 						<span class="red">$$\forall X \exists Y (p(Y) \; | \; (q \; \& \; r(X)))$$</span>
 						becomes<br><br>
 						$\{\; $<span class="green">$p(sk(X))\;|\;q$</span>$,\;$ <span class="green">$p(sk(X))\;|\;r(X)$</span>$ \;\} $
@@ -284,6 +286,23 @@
 					<ul>
 						<li style="font-size: 0.7em;">Improving given clause selection is a core goal of ATP research</li>
 					</ul>
+				</section>
+
+				<section>
+					<div class="box">
+						<ul>
+							<li>No clause is a <span class="green emph">good</span> choice or <span class="red emph">bad</span> choice in isolation</li>
+							<li>Given clause selection happens in a <span class="emph green">context</span></li>
+							<li>Possible contexts include:
+								<ul>
+									<li class="red">All clauses in processed and unprocessed sets</li>
+									<li class="red">All clauses in processed set</li>
+									<li>All problem statement clauses</li>
+									<li class="green">Negated conjecture clauses</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
 				</section>
 
 				<aside class="notes">
@@ -345,7 +364,7 @@
 							$$
 							\underbrace{
 							\mycolv{1.2\\-0.2\\0.9\\ \vdots}
-							}_\text{Given Clause},
+							}_\text{given clause},
 							\underbrace{
 							\begin{bmatrix}
 							0.3 & -1.1 & 0.7 & \cdots \\
@@ -353,7 +372,7 @@
 							0.1 & 0.24 & 0.2& \cdots \\
 							\vdots & \vdots & \vdots & \ddots
 							\end{bmatrix}
-							}_\text{Context Clauses}
+							}_\text{context clauses}
 							$$
 						</div>
 						<div style="margin:auto;">
@@ -369,7 +388,7 @@
 							<span>
 								<span class="green">Select</span> or <span class="red">Don't</span><br>
 								<span style="font-size:0.5em;">
-									Within E, the output becomes the priority for a priority queue.
+									Within the theorem prover, this output becomes the priority for a priority queue.
 								</span>
 							</span>
 						</div>
@@ -527,47 +546,84 @@
 			<section>
 				<h3>Supervised Approaches</h3>
 				<section>
-					<div class="box" style="font-size:0.65em;">
+					<div class="" style="font-size:0.65em;">
 						<h4 style="color:rgb(150, 255, 150);" class="emph">My Custom Model</h4>
-						<ul>
-							<li><span class="emph green">Asynchronous message passing</span> (uses topological sorting)</li>
-							<li><span class="emph green">Attention</span> instead of simple sum</li>
-							<li><span class="emph green">Readout via root</span> rather than via global pooling</li>
-							<li><span class="red">Hard to parallelize (super slow)</span></li>
-						</ul>
-						<div class="r-stack">
-							<img class="smallimg " src="images/async/Async Dag Processing1.svg">
-							<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing2.svg">
-							<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing3.svg">
-							<img class="smallimg fragment fade-in-then-out" src="images/async/Async Dag Processing4.svg">
+						<div class="row">
+							<ul>
+								<li><span class="emph green">Asynchronous message passing</span></li>
+								<li><span class="emph green">Attention</span> instead of simple sum</li>
+								<li><span class="emph green">Readout via root</span> rather than via global pooling</li>
+								<li><span class="red">Hard to parallelize (super slow)</span></li>
+							</ul>
+							<div class="r-stack">
+								<img style="width:27em;margin:0px;" class="" src="images/async/Async Dag Processing1.svg">
+								<img style="width:27em;margin:0px;" class="fragment fade-in-then-out" src="images/async/Async Dag Processing2.svg">
+								<img style="width:27em;margin:0px;" class="fragment fade-in-then-out" src="images/async/Async Dag Processing3.svg">
+								<img style="width:27em;margin:0px;" class="fragment fade-in-then-out" src="images/async/Async Dag Processing4.svg">
+							</div>
 						</div>
 					</div>
 				</section>
 
 				<section>
-					<div class="box">
+					<div class="" style="font-size:0.7em;">
 						<h4 style="color:rgb(150, 255, 150);" class="emph">My 2-Layer PyTorch Geometric (PyG) GCN</h4>
-						<ul>
-							<li> <span class="green">Simple</span></li>
-							<li> <span class="green">Parallelism handled by PyG</span></li>
-						</ul>
-						<div class="r-stack">
-							<img class="smallimg " src="images/async/Sync Dag Processing1.svg">
-							<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing2.svg">
-							<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing3.svg">
-							<img class="smallimg fragment fade-in-then-out" src="images/async/Sync Dag Processing4.svg">
+						<div class="row">
+							<ul>
+								<li> <span class="green">Simple</span></li>
+								<li> <span class="green">Parallelism handled by PyG</span></li>
+							</ul>
+							<div class="r-stack">
+								<img style="width:18.2em;margin:0px;" class="" src="images/async/Sync Dag Processing1.svg">
+								<img style="width:18.2em;margin:0px;" class="fragment fade-in-then-out" src="images/async/Sync Dag Processing2.svg">
+								<img style="width:18.2em;margin:0px;" class="fragment fade-in-then-out" src="images/async/Sync Dag Processing3.svg">
+								<img style="width:18.2em;margin:0px;" class="fragment fade-in-then-out" src="images/async/Sync Dag Processing4.svg">
+							</div>
 						</div>
 					</div>
 				</section>
 
 				<section>
-					<div class="box">
+					<div class="box" style="font-size:0.7em;">
 						<h4>Classifiers</h4>
 						<ul>
 							<li>Both clause embedding models are trained with the same classifier architecture</li>
 							<li>The classifier sums the context vectors and then concatenates this sum with the given clause vector</li>
 							<li>This concatenation then goes through a simple MLP with ReLU activation</li>
 						</ul>
+						<br><br>
+						<div class="row">
+							<div class="box" style="font-size:0.5em;">
+								$$
+								\underbrace{
+								\mycolv{1.2\\-0.2\\0.9\\ \vdots}
+								}_\text{given clause},
+								\underbrace{
+								\begin{bmatrix}
+								0.3 & -1.1 & 0.7 & \cdots \\
+								1.3 & -0.3 & -0.3& \cdots \\
+								0.1 & 0.24 & 0.2& \cdots \\
+								\vdots & \vdots & \vdots & \ddots
+								\end{bmatrix}
+								}_\text{context clauses}
+								$$
+							</div>
+							<div style="margin:auto;">
+								$\rightarrow$
+							</div>
+							<div class="box emph" style="margin:auto; font-weight: bold;">
+								Classifier
+							</div>
+							<div style="margin:auto;">
+								$\rightarrow$
+							</div>
+							<div class="box" style="width:100%;display:grid;justify-content: center;align-items:center;">
+								<span>
+									<span class="green">Select</span> or <span class="red">Don't</span><br>
+								</span>
+							</div>
+						</div>
+
 					</div>
 				</section>
 			</section>
@@ -579,7 +635,7 @@
 					<div class="box" style="height:15em;">
 						<h4>Formulae Autoencoder</h4>
 						<a href="https://arxiv.org/pdf/2101.09142.pdf">Purgal et al.</a>
-						<div class="r-stack" style="width:20em; height:10em;margin:auto;">
+						<div class="r-stack" style="width:22em; height:10em;margin:auto;">
 							<img src="images/extractors.png" alt="extractors" class="fragment fade-in-then-out"
 								style="margin:auto;">
 							<img src="images/differenceTraining.png" alt="differenceTraining"
@@ -590,8 +646,8 @@
 
 				<section>
 					<div class="box">
-						<h4>GNN $\geq$ LSTM/Transformers/etc</h4>
-						<div class="green emph">(My Clause Autoencoder)</div>
+						<h4>My Clause Autoencoder</h4>
+						<div class="green emph">(GNN $\geq$ sequence models?)</div>
 						<div style="display:flex; flex-flow: row wrap; justify-content: space-around;">
 								<img src="images/ClauseAE1.svg" alt="ClauseAE1.svg" width="350">
 								<img src="images/ClauseAE2.svg" alt="ClauseAE2.svg" width="350">
@@ -600,7 +656,7 @@
 				</section>
 
 				<section>
-					<div class="box" style="width:18em;margin:auto;">
+					<div class="box" style="width:22em;margin:auto;">
 						<h4>Recursive Training</h4>
 						<a href="https://arxiv.org/pdf/2101.09142.pdf">Purgal et al.</a>
 						<img src="images/recursiveTraining.png" alt="recursiveTraining"
@@ -610,7 +666,7 @@
 
 				<section>
 					<div class="box">
-						<h5 class="emph" style="color:rgb(150, 255, 150);">My Variational Clause Autoencoder</h5>
+						<h5>My Variational Clause Autoencoder</h5>
 						<img src="images/ClauseVAE.svg" alt="ClauseVAE.svg" width="600">
 					</div>
 				</section>
@@ -619,13 +675,17 @@
 			<section>
 				<h3>Model Evaluation</h3>
 				<section>
-					<div class="box">
-						<h4>Models to Evaluate</h4>
+					<div class="box" style="font-size: 0.7em;">
+						<h4>My Models to Evaluate</h4>
 						<ul>
-							<li>My Custom Model</li>
-							<li>My Simple 2-layer PyG GCN model</li>
-							<li>My Ordered DAG Autoencoder</li>
-							<li>My Variational Ordered DAG Autoencoder</li>
+							<li>Custom Model</li>
+							<li>2-layer PyTorch Geometric GCN model</li>
+							<li>Ordered DAG Autoencoder</li>
+							<li>Variational Ordered DAG Autoencoder</li>
+							<hr>
+							<li>
+								<span class="green emph">BONUS: </span> SimpleEmbedding (sum of learned symbol embeddings)
+							</li>
 						</ul>
 					</div>
 				</section>
@@ -652,26 +712,18 @@
 
 
 				<section>
-					<h4>Overview</h4>
-					<div class="box small">
-						<!-- Which models work well for which objectives? -->
-						<!-- AE/VAE vs GCN vs SimpleEmbedding -->
-						<!-- <table>
-							<tr><th></th><th></th><th></th></tr>
-							<tr><th>c</th><td>hello</td><td>hello</td></tr>
-							<tr><th>d</th><td>hello</td><td>hello</td></tr>
-						</table>
-						<br> -->
+					<h4>Model Evaluation Overview</h4>
+					<div class="box" style="font-size:0.8em;">
 						<ul>
 							<li>Autoencoder models summarize DAGs by their root, while the GCN model summarizes DAGs by global pooling</li>
-							<li><span class="green emph">MaxDepth</span> Objective benefits greatly from root summary</li>
-							<li>
-								A simple vector of symbol counts leads to the highest (or tied for highest)
+							<li class="fragment"><span class="green emph">MaxDepth</span> Objective benefits greatly from root summary</li>
+							<li class="fragment">
+								<span class="green emph">SimpleEmbedding</span> leads to the highest (or tied for highest)
 								accuracy in the <span class="green emph">NumNodes</span> and <span class="green emph">NumEqualities</span> objectives.
 							</li>
-							<li>
+							<li class="fragment">
 								The <span class="green emph">NumDistinctVars</span> objective accuracy was maximized by the GCN model
-								and the autoencoding models yielded lower accuracy. (98% vs 99.5%)
+								and the autoencoding models yielded lower accuracy. (99.5% vs 98%)
 							</li>
 						</ul>
 					</div>
@@ -760,11 +812,31 @@
 						</div>
 					</div>
 				</section>
+
+				<section>
+					<div class="box">
+						<h4>Rough Comparison with Enigma</h4>
+							<div class="box">
+								<span class="green emph">My Results:</span><br>
+								<ul>
+									<li>Roughly even training and testing accuracy at ~ $93\%$ </li>
+								</ul>
+							</div>
+	
+							<div class="box">
+								<span class="green emph">Enigma's Results:</span><br>
+								<div class="r-stack">
+									<img class="fragment fade-in-then-out" src="images/enigmaTrain.png">
+									<img class="fragment" src="images/enigmaTest.png">
+								</div>
+							</div>
+					</div>
+				</section>
 			</section>
 
 
 			<section>
-				<h3>Conclusion and Insights</h3>
+				<h3>My Insights are my Contributions</h3>
 				<div class="box small">
 					<ul>
 						<li class="fragment">Simple models go a long way</li>
